@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0e0d">
+    <meta name="description" content="Explore stored security data and investor-scoped portfolios with EquityDesk.">
+    <title>EquityDesk — Market Discover</title>
+    <link rel="stylesheet" href="css/style.css?v=equitydesk-6">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <a class="brand" href="#market" aria-label="EquityDesk market discover">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><path d="M5 22.5 12 15l5 4 9-11M18 8h8v8"/></svg>
+                </span>
+                <span class="brand-copy"><strong>EquityDesk</strong><small>MARKET &amp; PORTFOLIO</small></span>
+            </a>
+            <div class="side-label">MARKET</div>
+            <nav class="side-nav" aria-label="Main navigation">
+                <button class="nav-link active" data-page="market"><span class="nav-icon">⌂</span>Discover</button>
+                <button class="nav-link" data-page="securities"><span class="nav-icon">⌕</span>All stocks</button>
+                <div class="side-label side-label-spaced">MY INVESTMENTS</div>
+                <button class="nav-link" data-page="investors"><span class="nav-icon">♙</span>Investor directory</button>
+                <button class="nav-link" data-page="portfolio-overview"><span class="nav-icon">◫</span>Portfolio overview</button>
+                <button class="nav-link" data-page="portfolios"><span class="nav-icon">▤</span>Portfolios</button>
+                <button class="nav-link" data-page="holdings"><span class="nav-icon">◉</span>Holdings</button>
+                <button class="nav-link" data-page="transactions"><span class="nav-icon">⇄</span>Transactions</button>
+                <button class="nav-link" data-page="watchlist"><span class="nav-icon">☆</span>Watchlist</button>
+                <div class="side-label side-label-spaced">INSIGHTS</div>
+                <button class="nav-link" data-page="analytics"><span class="nav-icon">▥</span>Analytics</button>
+                <button class="nav-link" data-page="risk"><span class="nav-icon">⌁</span>Risk &amp; allocation</button>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="db-status"><span class="status-dot" id="status-dot"></span><span><strong id="backend-status-text">Connecting</strong><small id="database-status-text">Checking database</small></span></div>
+                <div class="sidebar-foot">Investor prices use stored SECURITY values.<br>Discover includes synthetic demo data only.</div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <button class="mobile-menu" id="mobile-menu" aria-label="Open navigation">☰</button>
+                <div><p class="eyebrow" id="page-eyebrow">EXPLORE THE MARKET</p><h1 id="page-title">Market Discover</h1></div>
+                <div class="topbar-actions">
+                    <label class="global-search"><span aria-hidden="true">⌕</span><input id="global-search" type="search" placeholder="Search stocks" aria-label="Search stocks"></label>
+                    <label class="global-filter"><span>Investor</span><select id="investor-filter" aria-label="Select investor"><option value="">Select investor</option></select></label>
+                    <label class="global-filter"><span>Portfolio</span><select id="global-portfolio-filter" aria-label="Filter by portfolio" disabled><option value="">Select investor first</option></select></label>
+                    <button class="icon-button" id="refresh-button" title="Refresh data" aria-label="Refresh data">↻</button>
+                    <div class="avatar" id="user-avatar">E</div>
+                </div>
+            </header>
+
+            <div id="notification-banner" class="toast hidden" role="status" aria-live="polite"></div>
+
+            <section class="page-view active" id="page-market" data-title="Market Discover" data-eyebrow="EXPLORE THE MARKET">
+                <div class="welcome-row">
+                    <div><h2>Discover the market<span class="accent">.</span></h2><p>Explore a clearly separated demonstration of market sections and activity.</p></div>
+                    <button class="button button-secondary" data-navigate="securities">Explore all stocks →</button>
+                </div>
+                <div class="demo-market-banner"><span class="demo-market-pulse"></span><strong>DEMO MARKET DATA · SYNTHETIC</strong><span>Illustrative values only · not live quotes or investment information</span></div>
+                <div class="index-grid" id="market-indices"></div>
+                <div class="content-grid market-highlights">
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">MARKET MOVERS</p><h3>Top gainers</h3></div><span class="demo-period">DEMO · 1D</span></div><div id="market-gainers" class="market-list"></div></article>
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">MARKET MOVERS</p><h3>Top losers</h3></div><span class="demo-period">DEMO · 1D</span></div><div id="market-losers" class="market-list"></div></article>
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">TRADING ACTIVITY</p><h3>Most traded</h3></div><span class="demo-period">DEMO</span></div><div id="market-most-bought" class="market-list"></div></article>
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">VOLUME</p><h3>Intraday volume leaders</h3></div><span class="demo-period">DEMO</span></div><div id="market-intraday" class="market-list"></div></article>
+                </div>
+                <div class="content-grid market-highlights">
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">MARGIN TRADING</p><h3>Most traded MTF stocks</h3></div><span class="demo-period">DEMO</span></div><div id="market-mtf" class="market-list"></div></article>
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">VOLUME MONITOR</p><h3>Volume shockers</h3></div><span class="demo-period">DEMO · VS. WEEKLY AVG.</span></div><div id="market-shockers" class="market-list"></div></article>
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">SECTOR TRENDS</p><h3>Sector performance</h3></div><span class="demo-period">DEMO · 1D</span></div><div id="market-sector-performance" class="sector-return-grid"></div></article>
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">EXCHANGE TRADED FUNDS</p><h3>Most bought ETFs</h3></div><span class="demo-period">DEMO</span></div><div id="market-etfs" class="market-list"></div></article>
+                </div>
+                <div class="content-grid market-bottom">
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">GLOBAL MARKETS</p><h3>Popular US stocks &amp; ETFs</h3></div><span class="demo-period">DEMO</span></div><div id="market-us" class="market-list"></div></article>
+                    <article class="panel demo-market-panel"><div class="panel-heading"><div><p class="eyebrow">MARKET COVERAGE</p><h3>Stocks in news</h3></div><span class="demo-period">FICTIONAL HEADLINES</span></div><div id="market-news" class="market-news-list"></div></article>
+                </div>
+                <article class="panel market-snapshot-panel">
+                    <div class="panel-heading"><div><p class="eyebrow">SECURITY CATALOGUE</p><h3>Explore securities</h3><small class="muted-copy">Stored SECURITY prices are not live quotes.</small></div><button class="text-button" data-navigate="securities">View all →</button></div>
+                    <div class="toolbar">
+                        <label class="search-field"><span>⌕</span><input id="market-search" type="search" placeholder="Search symbol or company"></label>
+                        <select id="market-sector"><option value="">All sectors</option></select>
+                        <label class="price-range-label">Min price<input id="market-min-price" type="number" min="0" step="0.01" placeholder="Any"></label>
+                        <label class="price-range-label">Max price<input id="market-max-price" type="number" min="0" step="0.01" placeholder="Any"></label>
+                        <select id="market-sort"><option value="symbol:asc">Symbol A–Z</option><option value="price:desc">Price high to low</option><option value="price:asc">Price low to high</option><option value="company:asc">Company A–Z</option><option value="sector:asc">Sector A–Z</option></select>
+                    </div>
+                    <div id="market-security-grid" class="stock-grid"></div>
+                </article>
+            </section>
+
+            <section class="page-view" id="page-portfolio-overview" data-title="Portfolio overview" data-eyebrow="YOUR FINANCIAL OVERVIEW">
+                <div class="welcome-row">
+                    <div><h2>Good to see you<span class="accent">.</span></h2><p>A clear view of your investments, all in one place.</p></div>
+                    <button class="button button-primary" data-open-trade>＋ Record a trade</button>
+                </div>
+                <div class="metric-grid">
+                    <article class="metric-card metric-featured"><div class="metric-top"><span>Current portfolio value</span><span class="metric-icon">↗</span></div><strong id="metric-current">—</strong><small id="metric-current-note">At prices in your database</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Invested capital</span><span class="metric-icon">◈</span></div><strong id="metric-invested">—</strong><small>Cost basis of open positions</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Unrealized P&amp;L</span><span class="metric-icon">⌁</span></div><strong id="metric-pnl">—</strong><small id="metric-pnl-note">Open-position return</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Overall return</span><span class="metric-icon">%</span></div><strong id="metric-return">—</strong><small>Compared with invested capital</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Portfolios</span><span class="metric-icon">▤</span></div><strong id="metric-portfolios">—</strong><small>Owned by selected investor</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Stocks held</span><span class="metric-icon">◉</span></div><strong id="metric-stocks">—</strong><small>Distinct open positions</small></article>
+                </div>
+                <div class="content-grid overview-grid">
+                    <article class="panel chart-panel">
+                        <div class="panel-heading"><div><p class="eyebrow">PORTFOLIO SNAPSHOT</p><h3>Invested vs. current value</h3></div><span class="live-label"><i></i> DATABASE PRICES</span></div>
+                        <div class="chart-scroll"><svg id="performance-chart" class="chart-svg" role="img" aria-label="Portfolio invested and current value comparison"></svg></div>
+                        <div class="chart-legend"><span><i class="legend-square legend-muted"></i>Invested</span><span><i class="legend-square"></i>Current value</span></div>
+                    </article>
+                    <article class="panel chart-panel allocation-panel">
+                        <div class="panel-heading"><div><p class="eyebrow">WHERE IT'S INVESTED</p><h3>Asset allocation</h3></div><button class="text-button" data-navigate="analytics">Details →</button></div>
+                        <div class="donut-wrap"><svg id="allocation-chart" class="donut-svg" role="img" aria-label="Current holdings by sector"></svg><div class="donut-center"><small>PORTFOLIO</small><strong id="allocation-total">—</strong></div></div>
+                        <div id="allocation-legend" class="allocation-legend"></div>
+                    </article>
+                </div>
+                <div class="content-grid overview-lower">
+                    <article class="panel">
+                        <div class="panel-heading"><div><p class="eyebrow">OPEN POSITIONS</p><h3>Best performers</h3></div><button class="text-button" data-navigate="holdings">All holdings →</button></div>
+                        <div id="best-performers" class="performer-list"><div class="empty-state">Loading your positions…</div></div>
+                    </article>
+                    <article class="panel">
+                        <div class="panel-heading"><div><p class="eyebrow">LATEST ACTIVITY</p><h3>Recent transactions</h3></div><button class="text-button" data-navigate="transactions">View history →</button></div>
+                        <div class="table-wrap"><table class="data-table compact"><thead><tr><th>Security</th><th>Type</th><th>Date</th><th class="align-right">Amount</th></tr></thead><tbody id="recent-trades"><tr><td colspan="4" class="empty-cell">Loading transactions…</td></tr></tbody></table></div>
+                    </article>
+                </div>
+                <article class="panel overview-portfolios-panel">
+                    <div class="panel-heading"><div><p class="eyebrow">YOUR ACCOUNTS</p><h3>Portfolio breakdown</h3></div><button class="text-button" data-navigate="portfolios">Manage portfolios →</button></div>
+                    <div id="overview-portfolio-grid" class="portfolio-grid"><div class="panel empty-state">Loading portfolios…</div></div>
+                </article>
+            </section>
+
+            <section class="page-view" id="page-investors" data-title="Investors" data-eyebrow="INVESTOR DIRECTORY">
+                <div class="section-intro"><div><h2>Investors</h2><p>Open an individual workspace to see only that investor’s portfolios and activity.</p></div><span class="subtle-count" id="investor-count">— investors</span></div>
+                <article class="panel">
+                    <div class="toolbar"><label class="search-field"><span>⌕</span><input id="investor-search" type="search" placeholder="Search investor name or ID"></label></div>
+                    <div id="investors-grid" class="investor-grid"><div class="empty-state">Loading investors…</div></div>
+                </article>
+            </section>
+
+            <section class="page-view" id="page-investor-workspace" data-title="Investor workspace" data-eyebrow="INDIVIDUAL INVESTOR">
+                <div class="section-intro"><div><h2 id="investor-workspace-name">Investor workspace</h2><p id="investor-workspace-contact">Only this investor’s portfolios, holdings and transactions are shown.</p></div><button class="button button-secondary" data-navigate="investors">← All investors</button></div>
+                <div class="metric-grid investor-metrics">
+                    <article class="metric-card"><div class="metric-top"><span>Invested capital</span></div><strong id="investor-metric-invested">—</strong><small>Open holdings cost basis</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Current value</span></div><strong id="investor-metric-current">—</strong><small>At stored database prices</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Unrealized P&amp;L</span></div><strong id="investor-metric-pnl">—</strong><small id="investor-metric-return">— return</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Portfolios</span></div><strong id="investor-metric-portfolios">—</strong><small>Owned by this investor</small></article>
+                </div>
+                <article class="panel investor-portfolios-panel"><div class="panel-heading"><div><p class="eyebrow">PORTFOLIO BREAKDOWN</p><h3>Portfolios</h3></div></div><div id="investor-portfolio-list" class="investor-portfolio-list"></div></article>
+                <article class="panel investor-detail-panel"><div class="panel-heading"><div><p class="eyebrow">OPEN POSITIONS</p><h3>Holdings</h3></div><button class="button button-secondary export-button" id="export-investor-holdings">Export CSV</button></div>
+                    <div class="table-wrap"><table class="data-table"><thead><tr><th>Security</th><th>Portfolio</th><th>Sector</th><th class="align-right">Shares</th><th class="align-right">Invested</th><th class="align-right">Current value</th><th class="align-right">P&amp;L</th></tr></thead><tbody id="investor-holdings-table"></tbody></table></div>
+                </article>
+                <article class="panel investor-detail-panel"><div class="panel-heading"><div><p class="eyebrow">ACTIVITY</p><h3>Transaction history</h3></div></div>
+                    <div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Portfolio</th><th>Security</th><th>Type</th><th class="align-right">Shares</th><th class="align-right">Total</th></tr></thead><tbody id="investor-trades-table"></tbody></table></div>
+                </article>
+                <div class="content-grid investor-insights">
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">PORTFOLIO MIX</p><h3>Sector allocation</h3></div></div><div id="investor-sector-allocation" class="bar-list"></div></article>
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">RELATIVE RETURN</p><h3>Strongest positions</h3></div></div><div id="investor-performers" class="performer-list"></div></article>
+                </div>
+            </section>
+
+            <section class="page-view" id="page-portfolios" data-title="Portfolios" data-eyebrow="ORGANIZE YOUR INVESTMENTS">
+                <div class="section-intro"><div><h2>Your portfolios</h2><p>Keep strategies separate and see how each one is performing.</p></div><button class="button button-primary" id="add-portfolio-button">＋ New portfolio</button></div>
+                <div class="toolbar"><label class="search-field"><span>⌕</span><input id="portfolio-search" type="search" placeholder="Search portfolio or investor"></label><select id="portfolio-sort"><option value="created_date:desc">Newest first</option><option value="current_value:desc">Current value: high to low</option><option value="total_pnl:desc">Profit: high to low</option><option value="total_pnl:asc">Loss: low to high</option><option value="portfolio_name:asc">Name A–Z</option></select></div>
+                <div id="portfolio-grid" class="portfolio-grid"><div class="panel empty-state">Loading portfolios…</div></div>
+            </section>
+
+            <section class="page-view" id="page-holdings" data-title="Holdings" data-eyebrow="EVERY POSITION, AT A GLANCE">
+                <div class="section-intro"><div><h2>Holdings</h2><p>Explore open positions and their current value.</p></div><div class="section-actions"><span class="subtle-count" id="holdings-count">— positions</span><button class="button button-secondary export-button" id="export-holdings">Export CSV</button></div></div>
+                <article class="panel">
+                    <div class="toolbar"><label class="search-field"><span>⌕</span><input id="holdings-search" type="search" placeholder="Search symbol, company or portfolio"></label><select id="holdings-sector"><option value="">All sectors</option></select><select id="holdings-sort"><option value="symbol:asc">Sort: Symbol</option><option value="current_value:desc">Current value: high to low</option><option value="pnl:desc">P&amp;L: high to low</option><option value="pnl:asc">P&amp;L: low to high</option><option value="quantity:desc">Quantity: high to low</option></select><label class="group-toggle"><input id="holdings-group-toggle" type="checkbox"> Group by security</label></div>
+                    <div id="holdings-grid" class="holdings-grid"><div class="empty-state">Loading holdings…</div></div>
+                </article>
+            </section>
+
+            <section class="page-view" id="page-securities" data-title="Securities" data-eyebrow="EXPLORE YOUR INVESTABLE UNIVERSE">
+                <div class="section-intro"><div><h2>Securities</h2><p>Prices shown are from your SECURITY table, not a live feed. Historical price data is unavailable.</p></div><span class="subtle-count" id="security-count">— securities</span></div>
+                <article class="panel">
+                    <div class="toolbar"><label class="search-field"><span>⌕</span><input id="security-search" type="search" placeholder="Search symbol or company"></label><select id="security-sector"><option value="">All sectors</option></select><label class="price-range-label">Min price<input id="security-min-price" type="number" min="0" step="0.01" placeholder="Any"></label><label class="price-range-label">Max price<input id="security-max-price" type="number" min="0" step="0.01" placeholder="Any"></label><select id="security-sort"><option value="symbol:asc">Symbol A–Z</option><option value="price:desc">Price high to low</option><option value="price:asc">Price low to high</option><option value="company:asc">Company A–Z</option><option value="sector:asc">Sector A–Z</option></select></div>
+                    <div id="securities-grid" class="stock-grid"></div>
+                </article>
+            </section>
+
+            <section class="page-view" id="page-security-detail" data-title="Security details" data-eyebrow="SECURITY PROFILE">
+                <div class="section-intro"><div><h2 id="security-detail-title">Security details</h2><p id="security-detail-subtitle">Historical closing prices appear only after genuine CSV data is imported.</p></div><div class="section-actions"><button class="button button-secondary" data-navigate="securities">← All securities</button><button class="button button-secondary" id="security-detail-watchlist">☆ Add to watchlist</button></div></div>
+                <div class="metric-grid detail-metrics">
+                    <article class="metric-card"><div class="metric-top"><span>Current stored price</span></div><strong id="security-detail-price">—</strong><small>From SECURITY.current_price · not live</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Portfolios holding</span></div><strong id="security-detail-portfolios">—</strong><small>Open positions only</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Total quantity held</span></div><strong id="security-detail-quantity">—</strong><small id="security-detail-sector">—</small></article>
+                </div>
+                <article class="panel detail-table-panel"><div class="panel-heading"><div><p class="eyebrow">OPEN POSITIONS</p><h3>Portfolios holding this security</h3></div><span class="subtle-count" id="security-detail-holding-count">— portfolios</span></div>
+                    <div class="table-wrap"><table class="data-table"><thead><tr><th>Portfolio</th><th>Investor</th><th class="align-right">Quantity</th><th class="align-right">Average cost</th><th class="align-right">Current value</th></tr></thead><tbody id="security-detail-holdings"><tr><td colspan="5" class="empty-cell">Select a security to load its holdings.</td></tr></tbody></table></div>
+                </article>
+                <article class="panel detail-chart-panel">
+                    <div class="panel-heading"><div><p class="eyebrow">IMPORTED HISTORICAL DATA</p><h3>Closing-price history</h3><small class="muted-copy">CSV-imported PRICE_HISTORY records; these are not live quotes.</small></div><div class="period-tabs" role="group" aria-label="Historical price period"><button class="period-tab" data-security-period="1W">1W</button><button class="period-tab active" data-security-period="1M">1M</button><button class="period-tab" data-security-period="1Y">1Y</button><button class="period-tab" data-security-period="ALL">ALL</button></div></div>
+                    <div class="chart-scroll"><svg id="security-history-chart" class="chart-svg detail-history-svg" role="img" aria-label="Imported historical closing prices"></svg></div>
+                    <div id="security-history-empty" class="empty-state hidden">No historical prices are available for this period. Import a genuine CSV price history to enable the chart.</div>
+                </article>
+                <article class="panel detail-table-panel"><div class="panel-heading"><div><p class="eyebrow">PORTFOLIO ACTIVITY</p><h3>Related transactions</h3></div><span class="subtle-count" id="security-detail-trade-count">— records</span></div>
+                    <div class="table-wrap"><table class="data-table"><thead><tr><th>Trade ID</th><th>Date</th><th>Investor</th><th>Portfolio</th><th>Type</th><th class="align-right">Quantity</th><th class="align-right">Price</th><th>Status / void audit</th></tr></thead><tbody id="security-detail-trades"><tr><td colspan="8" class="empty-cell">Select a security to load its activity.</td></tr></tbody></table></div>
+                </article>
+            </section>
+
+            <section class="page-view" id="page-portfolio-detail" data-title="Portfolio details" data-eyebrow="PORTFOLIO WORKSPACE">
+                <div class="section-intro"><div><h2 id="portfolio-detail-title">Portfolio details</h2><p id="portfolio-detail-subtitle">Portfolio accounting from active transactions and stored SECURITY prices.</p></div><button class="button button-secondary" data-navigate="portfolios">← All portfolios</button></div>
+                <div class="metric-grid detail-metrics">
+                    <article class="metric-card metric-featured"><div class="metric-top"><span>Portfolio value</span></div><strong id="portfolio-detail-value">—</strong><small>At SECURITY.current_price values</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Total invested</span></div><strong id="portfolio-detail-invested">—</strong><small>Open holdings cost basis</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Realized P&amp;L</span></div><strong id="portfolio-detail-realized">—</strong><small>FIFO across active trades</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Unrealized P&amp;L</span></div><strong id="portfolio-detail-unrealized">—</strong><small>Open holdings at stored prices</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Total P&amp;L</span></div><strong id="portfolio-detail-total-pnl">—</strong><small>Realized + unrealized</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Overall return</span></div><strong id="portfolio-detail-return">—</strong><small>Realized + unrealized / active BUY value</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>XIRR</span></div><strong id="portfolio-detail-xirr">—</strong><small id="portfolio-detail-xirr-note">Dated cash flows · stored current valuation</small></article>
+                </div>
+                <div class="content-grid detail-overview-grid">
+                    <article class="panel detail-chart-panel"><div class="panel-heading"><div><p class="eyebrow">HISTORICAL PERFORMANCE</p><h3>Portfolio value over time</h3><small class="muted-copy">Calculated only from genuine PRICE_HISTORY and transaction records.</small></div></div>
+                        <div class="chart-scroll"><svg id="portfolio-history-chart" class="chart-svg detail-history-svg" role="img" aria-label="Historical portfolio value"></svg></div>
+                        <div id="portfolio-history-empty" class="empty-state">A historical portfolio chart requires at least two comparable valuations from PRICE_HISTORY.</div>
+                    </article>
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">CURRENT EXPOSURE</p><h3>Sector allocation</h3></div></div><div class="donut-wrap"><svg id="portfolio-detail-allocation-chart" class="donut-svg" role="img" aria-label="Portfolio sector allocation"></svg><div class="donut-center"><small>PORTFOLIO</small><strong id="portfolio-detail-allocation-total">—</strong></div></div><div id="portfolio-detail-allocation-legend" class="allocation-legend"></div><div id="portfolio-detail-sectors" class="bar-list hidden"></div></article>
+                </div>
+                <article class="panel detail-table-panel"><div class="panel-heading"><div><p class="eyebrow">OPEN POSITIONS</p><h3>Holdings</h3></div><span class="subtle-count" id="portfolio-detail-holdings-count">— positions</span></div>
+                    <div class="table-wrap"><table class="data-table"><thead><tr><th>Security</th><th>Sector</th><th class="align-right">Quantity</th><th class="align-right">Open cost basis</th><th class="align-right">Stored price</th><th class="align-right">Current value</th><th class="align-right">Realized P&amp;L</th><th class="align-right">Unrealized P&amp;L</th></tr></thead><tbody id="portfolio-detail-holdings"><tr><td colspan="8" class="empty-cell">Select a portfolio to load holdings.</td></tr></tbody></table></div>
+                </article>
+                <article class="panel detail-table-panel"><div class="panel-heading"><div><p class="eyebrow">ACTIVITY LEDGER</p><h3>Transaction history</h3></div><span class="subtle-count" id="portfolio-detail-trade-count">— records</span></div>
+                    <div class="table-wrap"><table class="data-table"><thead><tr><th>Trade ID</th><th>Date</th><th>Security</th><th>Type</th><th class="align-right">Quantity</th><th class="align-right">Price</th><th class="align-right">Amount</th><th>Status / void audit</th></tr></thead><tbody id="portfolio-detail-trades"><tr><td colspan="8" class="empty-cell">Select a portfolio to load transactions.</td></tr></tbody></table></div>
+                </article>
+            </section>
+
+            <section class="page-view" id="page-transactions" data-title="Transactions" data-eyebrow="YOUR COMPLETE ORDER HISTORY">
+                <div class="section-intro"><div><h2>Transactions</h2><p>Record BUY and SELL trades and review your transaction history.</p></div><button class="button button-primary" data-open-trade>＋ Record a trade</button></div>
+                <div class="content-grid transaction-layout">
+                    <article class="panel transaction-form-panel">
+                        <div class="panel-heading"><div><p class="eyebrow">ORDER ENTRY</p><h3>Record a trade</h3></div></div>
+                        <form id="trade-form" class="form-stack" novalidate>
+                            <div id="trade-form-error" class="inline-error hidden" role="alert" aria-live="polite"></div>
+                            <label>Investor<select id="form-investor" required><option value="">Choose investor</option></select></label>
+                            <label>Portfolio<select id="form-portfolio" required disabled><option value="">Choose investor first</option></select></label>
+                            <label>Security<select id="form-security" required><option value="">Choose security</option></select></label>
+                            <fieldset class="trade-type"><legend>Transaction type</legend><label class="buy-choice"><input type="radio" name="trade_type" value="BUY" checked>BUY</label><label class="sell-choice"><input type="radio" name="trade_type" value="SELL">SELL</label></fieldset>
+                            <div class="form-row"><label>Quantity<input id="form-quantity" type="number" min="1" step="1" placeholder="e.g. 10" required></label><label>Price per share<input id="form-price" type="number" min="0.01" step="0.01" placeholder="0.00" required></label></div>
+                            <label>Transaction date<input id="form-date" type="date" required></label>
+                            <div class="estimate-row"><span>Estimated order value</span><strong id="trade-total-estimate">₹0.00</strong></div>
+                            <button class="button button-primary button-full" id="btn-submit-trade" type="submit">Submit transaction</button>
+                        </form>
+                    </article>
+                    <article class="panel">
+                        <div class="panel-heading"><div><p class="eyebrow">ACTIVITY LEDGER</p><h3>Transaction history</h3></div><span class="subtle-count" id="trades-count">— records</span></div>
+                        <div class="toolbar filter-toolbar"><label class="search-field"><span>⌕</span><input id="trade-search" type="search" placeholder="Search security"></label><select id="trade-type-filter"><option value="">All types</option><option value="BUY">Buy</option><option value="SELL">Sell</option></select><select id="trade-status-filter"><option value="">All statuses</option><option value="active">Active only</option><option value="voided">Voided only</option></select><select id="trade-portfolio-filter"><option value="">All portfolios</option></select><select id="trade-security-filter"><option value="">All securities</option></select><label class="date-filter">From<input id="trade-from-date" type="date"></label><label class="date-filter">To<input id="trade-to-date" type="date"></label><button class="button button-secondary export-button" id="export-trades">Export CSV</button></div>
+                        <div id="monthly-trade-summary" class="monthly-summary"></div>
+                        <div class="table-wrap"><table class="data-table"><thead><tr><th>Trade ID</th><th>Date</th><th>Security</th><th>Portfolio</th><th>Type</th><th class="align-right">Qty</th><th class="align-right">Price</th><th class="align-right">Total</th><th>Status</th><th>Void audit details</th><th>Action</th></tr></thead><tbody id="trades-table"><tr><td colspan="11" class="empty-cell">Loading transactions…</td></tr></tbody></table></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="page-view" id="page-watchlist" data-title="Watchlist" data-eyebrow="KEEP AN EYE ON SECURITIES">
+                <div class="section-intro"><div><h2>Your watchlist</h2><p>A personal shortlist for the securities you want to follow.</p></div><button class="button button-secondary" data-navigate="securities">Browse securities</button></div>
+                <div class="notice"><span>ⓘ</span><p>Watchlists and optional price targets are stored in MySQL for the selected investor. Select an investor in the header to manage their list.</p></div>
+                <article class="panel"><div class="toolbar"><label class="search-field"><span>⌕</span><input id="watchlist-search" type="search" placeholder="Search watchlist"></label><select id="watchlist-sector"><option value="">All sectors</option></select></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Security</th><th>Sector</th><th>Database price</th><th>Target price</th><th>Alert</th><th></th></tr></thead><tbody id="watchlist-table"><tr><td colspan="6" class="empty-cell">Select an investor to load their watchlist.</td></tr></tbody></table></div></article>
+            </section>
+
+            <section class="page-view" id="page-analytics" data-title="Analytics" data-eyebrow="UNDERSTAND YOUR PORTFOLIO">
+                <div class="section-intro"><div><h2>Analytics</h2><p>Allocation and performance computed from current positions and stored security prices.</p></div></div>
+                <div class="content-grid analytics-grid">
+                    <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">PORTFOLIO COMPARISON</p><h3>Invested vs. current value</h3></div></div><div class="chart-scroll"><svg id="analytics-performance-chart" class="chart-svg" role="img" aria-label="Portfolio value comparison"></svg></div><div class="chart-legend"><span><i class="legend-square legend-muted"></i>Invested</span><span><i class="legend-square"></i>Current value</span></div></article>
+                    <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">CAPITAL DISTRIBUTION</p><h3>By sector</h3></div></div><div id="analytics-sectors" class="bar-list"></div></article>
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">RELATIVE CONTRIBUTION</p><h3>Largest positions</h3></div></div><div id="analytics-stocks" class="bar-list"></div></article>
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">TRADE ACTIVITY</p><h3>BUY vs. SELL</h3></div></div><div id="trade-activity" class="activity-summary"></div></article>
+                </div>
+                <div class="content-grid analytics-activity-grid">
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">TRANSACTION ACTIVITY</p><h3>Monthly BUY / SELL volume</h3></div></div><div id="monthly-activity-chart" class="monthly-chart"></div></article>
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">PORTFOLIO SCOPE</p><h3>Selected investor context</h3></div></div><div id="investor-comparison" class="empty-state">Analytics are scoped to the investor selected above.</div></article>
+                </div>
+                <div class="content-grid analytics-bottom">
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">RELATIVE RETURN</p><h3>Top-performing positions</h3></div></div><div id="analytics-best" class="performer-list"></div></article>
+                    <article class="panel"><div class="panel-heading"><div><p class="eyebrow">RELATIVE RETURN</p><h3>Positions to review</h3></div></div><div id="analytics-worst" class="performer-list"></div></article>
+                </div>
+            </section>
+
+            <section class="page-view" id="page-risk" data-title="Risk & allocation" data-eyebrow="A RULE-BASED PORTFOLIO CHECK">
+                <div class="section-intro"><div><h2>Risk &amp; diversification</h2><p>Concentration indicators based on the current value of your open positions.</p></div></div>
+                <div class="notice"><span>ⓘ</span><p>These are simple concentration checks, not investment advice or predictions of future performance.</p></div>
+                <div class="metric-grid risk-metrics">
+                    <article class="metric-card"><div class="metric-top"><span>Concentration indicator</span><span class="metric-icon">⌁</span></div><strong id="risk-category">—</strong><small>Rule-based, based on the largest sector or stock weight</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Largest sector weight</span><span class="metric-icon">▥</span></div><strong id="risk-sector">—</strong><small>Share of total current portfolio value</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Largest stock weight</span><span class="metric-icon">◉</span></div><strong id="risk-stock">—</strong><small>Share of total current portfolio value</small></article>
+                    <article class="metric-card"><div class="metric-top"><span>Sector coverage</span><span class="metric-icon">◇</span></div><strong id="risk-counts">—</strong><small>Sectors and securities represented</small></article>
+                </div>
+                <article class="panel risk-panel"><div class="panel-heading"><div><p class="eyebrow">CURRENT DISTRIBUTION</p><h3>How concentrated are your positions?</h3></div></div><div id="risk-breakdown" class="bar-list"></div><div class="risk-scale"><span>Broadly diversified &lt; 25%</span><span>Moderate 25–40%</span><span>High &gt; 40%</span></div></article>
+            </section>
+
+            <footer class="app-footer"><span>EquityDesk</span><span>Investor analytics use MySQL records · Market Discover is synthetic demo data</span></footer>
+        </main>
+    </div>
+
+    <dialog class="modal" id="portfolio-modal">
+        <form id="portfolio-form" class="modal-card">
+            <div class="modal-heading"><div><p class="eyebrow">PORTFOLIO DETAILS</p><h2 id="portfolio-modal-title">New portfolio</h2></div><button class="icon-button" type="button" data-close-modal aria-label="Close dialog">×</button></div>
+            <input id="portfolio-id" type="hidden">
+            <label id="portfolio-investor-field">Investor<select id="portfolio-investor" required><option value="">Choose investor</option></select></label>
+            <label>Portfolio name<input id="portfolio-name" type="text" maxlength="100" placeholder="e.g. Long-term growth" required></label>
+            <div class="modal-actions"><button class="button button-secondary" type="button" data-close-modal>Cancel</button><button class="button button-primary" id="save-portfolio-button" type="submit">Create portfolio</button></div>
+        </form>
+    </dialog>
+
+    <dialog class="modal" id="security-modal">
+        <div class="modal-card">
+            <div class="modal-heading"><div><p class="eyebrow">SECURITY DETAILS</p><h2 id="security-modal-title">Security</h2></div><button class="icon-button" type="button" data-close-modal aria-label="Close dialog">×</button></div>
+            <div id="security-modal-content" class="security-detail-content"></div>
+            <div class="modal-actions"><button class="button button-secondary" type="button" data-close-modal>Close</button><button class="button button-primary" id="security-watchlist-button" type="button">＋ Add to watchlist</button></div>
+        </div>
+    </dialog>
+
+    <dialog class="modal" id="void-trade-modal">
+        <form class="modal-card" method="dialog" id="void-trade-form">
+            <div class="modal-heading"><div><p class="eyebrow">VOID TRANSACTION</p><h2>Cancel this trade</h2></div><button class="icon-button" type="button" data-close-modal aria-label="Close dialog">×</button></div>
+            <input id="void-trade-id" type="hidden">
+            <label>Reason for voiding<input id="void-trade-reason" type="text" maxlength="255" placeholder="Enter a corrective reason" required></label>
+            <div class="modal-actions"><button class="button button-secondary" type="button" data-close-modal>Cancel</button><button class="button button-primary" id="confirm-void-button" type="submit">Void transaction</button></div>
+        </form>
+    </dialog>
+
+    <script src="js/script.js?v=equitydesk-5"></script>
+</body>
+</html>

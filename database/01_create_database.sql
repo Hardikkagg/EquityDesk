@@ -1,0 +1,3 @@
+CREATE DATABASE stock_portfolio_management;
+
+USE stock_portfolio_management;
